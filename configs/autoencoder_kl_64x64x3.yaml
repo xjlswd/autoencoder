@@ -4,10 +4,10 @@ model:
     monitor: "val/rec_loss"
     embed_dim: 3
     lossconfig:
-      disc_start: 50001
+      disc_start: 0
       kl_weight: 0.000001
       disc_weight: 0.5
-    # ckpt_path: 
+    ckpt_path: "kl-f4/model.ckpt"
     ddconfig:
       double_z: True
       z_channels: 3
@@ -23,8 +23,8 @@ model:
 
 
 data:
-  batch_size: 12
-  num_workers: 12
+  batch_size: 8
+  num_workers: 2
   train:
       data_root: "data/xray/train"
       size:  256
@@ -63,9 +63,9 @@ lightning:
     benchmark: True
     accumulate_grad_batches: 2
     accelerator: "gpu"
-    devices: 1
+    devices: 2
     num_nodes: 1
-    precision: 16
+    # precision: 16
   # trainer:
   #   benchmark: True
   #   accumulate_grad_batches: 2
