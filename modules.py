@@ -54,7 +54,7 @@ class Upsample(nn.Module):
         x = torch.nn.functional.interpolate(x, scale_factor=2.0, mode="nearest")
         if self.with_conv:
             x = self.conv(x)
-        return 
+        return x
 
 class Downsample(nn.Module):
     def __init__(self, in_channels, with_conv):

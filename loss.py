@@ -3,6 +3,7 @@ import torch
 import functools
 import torch.nn as nn
 from lpips import LPIPS
+import torch.nn.functional as F
 
 
 def adopt_weight(weight, global_step, threshold=0, value=0.):
@@ -197,13 +198,13 @@ class LPIPSWithDiscriminator(nn.Module):
         if self.perceptual_weight > 0:
             p_loss = self.perceptual_loss(inputs.contiguous(), reconstructions.contiguous())
             rec_loss = rec_loss + self.perceptual_weight * p_loss
-
+        rec_loss = rec_loss.mean()
         nll_loss = rec_loss / torch.exp(self.logvar) + self.logvar
         weighted_nll_loss = nll_loss
-        if weights is not None:
-            weighted_nll_loss = weights*nll_loss
-        weighted_nll_loss = torch.sum(weighted_nll_loss) / weighted_nll_loss.shape[0]
-        nll_loss = torch.sum(nll_loss) / nll_loss.shape[0]
+        # if weights is not None:
+        #     weighted_nll_loss = weights*nll_loss
+        # weighted_nll_loss = torch.sum(weighted_nll_loss) / weighted_nll_loss.shape[0]
+        # nll_loss = torch.sum(nll_loss) / nll_loss.shape[0]
         kl_loss = posteriors.kl()
         kl_loss = torch.sum(kl_loss) / kl_loss.shape[0]
 
